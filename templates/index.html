@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple ChatGPT Chatbox</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 10px; background-color: #222; color: white; }
+        #chat { height: 400px; overflow-y: auto; padding: 5px; border: 1px solid #444; margin-bottom: 10px; }
+        input { width: 80%; padding: 8px; }
+        button { padding: 8px; }
+        .message { margin: 10px 0; }
+        .user { color: #0bf; }
+        .bot { color: #0f0; }
+    </style>
+</head>
+<body>
+    <div id="chat"></div>
+    <input id="input" placeholder="Type your message..." />
+    <button onclick="send()">Send</button>
+
+    <script>
+        async function send() {
+            let input = document.getElementById('input');
+            let chat = document.getElementById('chat');
+            chat.innerHTML += '<div class="message user">You: ' + input.value + '</div>';
+            
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'prompt=' + encodeURIComponent(input.value)
+            });
+
+            const text = await response.text();
+            chat.innerHTML += '<div class="message bot">Bot: ' + text + '</div>';
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+        }
+    </script>
+</body>
+</html>
